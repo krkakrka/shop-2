@@ -1,5 +1,4 @@
 import React from 'react';
-import random from 'random';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import { ProductCard } from '../';
@@ -17,7 +16,7 @@ function ProductsCollection({ products }) {
         product => (
           <GridListTile
             key={product.id}
-            cols={random.int(1, 2)}
+            cols={1}
             rows={3}
           >
             <ProductCard product={product} />
