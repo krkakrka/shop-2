@@ -4,7 +4,9 @@ import GridListTile from '@material-ui/core/GridListTile';
 import { ProductCard } from '../';
 import './ProductsCollection.css';
 
-function ProductsCollection({ products }) {
+const noop = () => {};
+
+function ProductsCollection({ products, onCart, onFavourites, renderProduct, isFavourite = noop }) {
   return (
     <GridList
       className="ProductsCollection-container"
@@ -19,7 +21,12 @@ function ProductsCollection({ products }) {
             cols={1}
             rows={3}
           >
-            <ProductCard product={product} />
+            <ProductCard
+              product={product}
+              onCart={() => onCart(product)}
+              onFavourites={() => onFavourites(product)}
+              isFavourite={isFavourite(product)}
+            />
           </GridListTile>
         )
       )}

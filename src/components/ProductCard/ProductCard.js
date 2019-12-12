@@ -9,7 +9,7 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import './ProductCard.css';
 
-function ProductCard({ product }) {
+function ProductCard({ product, isFavourite, onCart, onFavourites }) {
     return (
         <Card className="ProductCard-container">
             <CardMedia
@@ -25,11 +25,11 @@ function ProductCard({ product }) {
                 </Typography>
             </CardContent>
             <CardActions disableSpacing className="ProductCard-actions">
-                <IconButton aria-label="add to cart">
+                <IconButton aria-label="add to cart" onClick={onCart}>
                     <ShoppingCartIcon />
                 </IconButton>
-                <IconButton aria-label="add to favorites">
-                    <FavoriteIcon />
+                <IconButton aria-label="add to favorites" onClick={onFavourites}>
+                    <FavoriteIcon style={{ color: isFavourite ? 'red' : 'inherit' }} />
                 </IconButton>
             </CardActions>
         </Card>
