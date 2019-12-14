@@ -13,20 +13,20 @@ import './ProductCard.css';
 function ProductCard({ product, isFavourite, onCart, onFavourites }) {
     return (
         <Card className="ProductCard-container">
-            <Link to={`/products/${product.id}`}>
-            <CardMedia
-                className="ProductCard-media"
-                image={product.image}
-                title={product.name} />
             <CardContent className="ProductCard-content">
-                <Typography gutterBottom variant="h5" component="h2">
-                    {product.name}
-                </Typography>
-                <Typography variant="body2" color="textSecondary" component="p">
-                    {product.description}
-                </Typography>
+                <Link to={`/products/${product.id}`}>
+                    <CardMedia
+                        className="ProductCard-media"
+                        image={product.image}
+                        title={product.name} />
+                    <Typography gutterBottom variant="h5" component="h2">
+                        {product.name}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary" component="p">
+                        {product.description}
+                    </Typography>
+                </Link>
             </CardContent>
-            </Link>
             <CardActions disableSpacing className="ProductCard-actions">
                 <IconButton aria-label="add to cart" onClick={onCart}>
                     <ShoppingCartIcon />

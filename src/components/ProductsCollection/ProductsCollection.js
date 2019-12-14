@@ -1,6 +1,5 @@
 import React from 'react';
-import GridList from '@material-ui/core/GridList';
-import GridListTile from '@material-ui/core/GridListTile';
+import Grid from '@material-ui/core/Grid';
 import { ProductCard } from '../';
 import './ProductsCollection.css';
 
@@ -8,29 +7,24 @@ const noop = () => {};
 
 function ProductsCollection({ products, onCart, onFavourites, renderProduct, isFavourite = noop }) {
   return (
-    <GridList
+    <Grid
+      container
+      spacing={4}
       className="ProductsCollection-container"
-      cellHeight={160}
-      cols={4}
-      spacing={20}
     >
       {products.map(
         product => (
-          <GridListTile
-            key={product.id}
-            cols={1}
-            rows={3}
-          >
+          <Grid item key={product.id}>
             <ProductCard
               product={product}
               onCart={() => onCart(product)}
               onFavourites={() => onFavourites(product)}
               isFavourite={isFavourite(product)}
             />
-          </GridListTile>
+          </Grid>
         )
       )}
-    </GridList>
+    </Grid>
   );
 }
 

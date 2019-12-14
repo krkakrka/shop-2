@@ -3,3 +3,7 @@
   flex-direction: column;
   align-items: center;
 }
+
+.App-container > * {
+  margin-bottom: 32px;
+}
