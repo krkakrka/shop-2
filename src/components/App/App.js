@@ -102,7 +102,7 @@ class App extends React.Component {
           </Route>
 
           <Route exact path="/products" render={
-            ({ location, history }) => {
+            ({ location }) => {
               const query = queryString.parse(location.search);
               let maxPriceExists;
               try {
