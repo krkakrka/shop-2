@@ -33,11 +33,16 @@ function removeProduct(products, index) {
   ];
 }
 
+function getProductById(id, products) {
+  return products.find((product) => product.id === id);
+}
+
 export {
   getCartProductIndex,
   existsInCart,
   getFavouritesProductIndex,
   existsInFavourites,
   replaceProduct,
-  removeProduct
+  removeProduct,
+  getProductById
 }

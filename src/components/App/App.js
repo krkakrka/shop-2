@@ -3,7 +3,11 @@ import Loader from 'react-loader-spinner';
 import {
   Switch,
   Route,
+  Link,
+  Redirect
 } from 'react-router-dom';
+import queryString from 'query-string';
+import validator from 'validator';
 import {
   ProductsCollection,
   NavigationBar,
@@ -16,8 +20,10 @@ import {
   getCartProductIndex,
   replaceProduct,
   removeProduct,
+  getProductById
 } from './App.utils';
 import './App.css';
+import ProductCard from '../ProductCard';
 
 class App extends React.Component {
   constructor() {
@@ -85,24 +91,61 @@ class App extends React.Component {
     if(error) {
       return <p>{error}</p>
     }
+
     return (
       <div className="App-container">
         <NavigationBar />
 
         <Switch>
           <Route exact path="/">
-            <ProductsCollection
-              products={products}
-              onCart={(product) => this.addToCart(product)}
-              onFavourites={(product) => this.toggleFavourite(product)}
-              isFavourite={(product) => favourites.findIndex((favouriteProduct) => favouriteProduct.id === product.id) !== -1}
-            />
+            <Redirect to="/products" />
           </Route>
 
-          <Route path="/favourites/something">Some child</Route>
+          <Route exact path="/products" render={
+            ({ location, history }) => {
+              const query = queryString.parse(location.search);
+              let maxPriceExists;
+              try {
+                maxPriceExists = validator.isNumeric(query.maxPrice);
+              } catch (e) {
+                maxPriceExists = false; 
+              }
+              const filteredProducts = maxPriceExists
+                ? products.filter((product) => product.price < Number(query.maxPrice))
+                : products;
+              return (
+                <ProductsCollection
+                  products={filteredProducts}
+                  onCart={(product) => this.addToCart(product)}
+                  onFavourites={(product) => this.toggleFavourite(product)}
+                  isFavourite={(product) => favourites.findIndex((favouriteProduct) => favouriteProduct.id === product.id) !== -1}
+                />
+              );
+            }}
+          />
+
+          <Route path="/products/:id" render={
+            ({ match }) => {
+              const product = getProductById(match.params.id, products);
+              if (product) {
+                return <ProductCard product={product} />;
+              } else {
+                return (
+                  <div>
+                    <p>{`Product ID invalid: ${match.params.id}`}</p>
+                    <h3>Available products:</h3>
+                    {products.map(product => (
+                      <p key={product.id}><Link to={`/products/${product.id}`}>{product.id}</Link></p>
+                    ))}
+                  </div>
+                );
+              }
+            }}
+          />
 
           <Route path="/favourites">
-            <ProductsCollection products={favourites}
+            <ProductsCollection
+              products={favourites}
               onCart={(product) => this.addToCart(product)}
               onFavourites={(product) => this.toggleFavourite(product)}
               isFavourite={(product) => favourites.findIndex((favouriteProduct) => favouriteProduct.id === product.id) !== -1}
@@ -110,7 +153,8 @@ class App extends React.Component {
           </Route>
 
           <Route path="/cart">
-            <ProductsCollection products={cart.map(entry => entry.product)}
+            <ProductsCollection
+              products={cart.map(entry => entry.product)}
               onCart={(product) => this.addToCart(product)}
               onFavourites={(product) => this.toggleFavourite(product)}
               isFavourite={(product) => favourites.findIndex((favouriteProduct) => favouriteProduct.id === product.id) !== -1}

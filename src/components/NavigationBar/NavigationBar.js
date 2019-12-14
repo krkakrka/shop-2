@@ -8,7 +8,7 @@ import {
 } from 'react-router-dom';
 
 const PATH_TO_TAB = {
-  '/': 0,
+  '/products': 0,
   '/favourites': 1,
   '/cart': 2
 };
@@ -22,7 +22,7 @@ function NavigationBar() {
   return (
     <AppBar position="static">
       <Tabs value={currentTab} centered>
-        <Tab label="Products" component={Link} to="/" />
+        <Tab label="Products" component={Link} to="/products" />
         <Tab label="Favourites" component={Link} to="/favourites" />
         <Tab label="Cart" component={Link} to="/cart" />
       </Tabs>
