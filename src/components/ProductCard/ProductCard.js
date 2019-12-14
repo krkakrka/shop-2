@@ -7,11 +7,13 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import { Link } from 'react-router-dom';
 import './ProductCard.css';
 
 function ProductCard({ product, isFavourite, onCart, onFavourites }) {
     return (
         <Card className="ProductCard-container">
+            <Link to={`/products/${product.id}`}>
             <CardMedia
                 className="ProductCard-media"
                 image={product.image}
@@ -24,6 +26,7 @@ function ProductCard({ product, isFavourite, onCart, onFavourites }) {
                     {product.description}
                 </Typography>
             </CardContent>
+            </Link>
             <CardActions disableSpacing className="ProductCard-actions">
                 <IconButton aria-label="add to cart" onClick={onCart}>
                     <ShoppingCartIcon />
