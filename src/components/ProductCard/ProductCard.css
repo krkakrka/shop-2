@@ -1,11 +1,13 @@
 .ProductCard-container {
   height: 100%;
+  max-width: 300px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
 .ProductCard-media {
+  min-height: 200px;
   flex-basis: 50%;
 }
 

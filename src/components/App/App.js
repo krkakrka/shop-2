@@ -3,7 +3,6 @@ import Loader from 'react-loader-spinner';
 import {
   Switch,
   Route,
-  Link,
   Redirect
 } from 'react-router-dom';
 import queryString from 'query-string';
@@ -11,6 +10,8 @@ import validator from 'validator';
 import {
   ProductsCollection,
   NavigationBar,
+  ProductsLinkList,
+  ProductCard
 } from '../';
 import { productsService } from '../../services';
 import {
@@ -23,7 +24,6 @@ import {
   getProductById
 } from './App.utils';
 import './App.css';
-import ProductCard from '../ProductCard';
 
 class App extends React.Component {
   constructor() {
@@ -86,10 +86,18 @@ class App extends React.Component {
     } = this.state;
 
     if (loading) {
-      return <Loader type="ThreeDots" color="red" height={80} width={80} />;
+      return (
+        <Loader
+          className="App-container"
+          type="ThreeDots"
+          color="red"
+          height={80}
+          width={80}
+        />
+      );
     }
     if(error) {
-      return <p>{error}</p>
+      return <p className="App-container">{error}</p>
     }
 
     return (
@@ -131,13 +139,7 @@ class App extends React.Component {
                 return <ProductCard product={product} />;
               } else {
                 return (
-                  <div>
-                    <p>{`Product ID invalid: ${match.params.id}`}</p>
-                    <h3>Available products:</h3>
-                    {products.map(product => (
-                      <p key={product.id}><Link to={`/products/${product.id}`}>{product.id}</Link></p>
-                    ))}
-                  </div>
+                  <ProductsLinkList products={products} invalidProductId={match.params.id} />
                 );
               }
             }}
