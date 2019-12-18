@@ -3,7 +3,8 @@ import Loader from 'react-loader-spinner';
 import {
   Switch,
   Route,
-  Redirect
+  Redirect,
+  withRouter
 } from 'react-router-dom';
 import queryString from 'query-string';
 import validator from 'validator';
@@ -11,9 +12,10 @@ import {
   ProductsCollection,
   NavigationBar,
   ProductsLinkList,
-  ProductCard
+  ProductCard,
+  Login
 } from '../';
-import { productsService } from '../../services';
+import { productsService, authService } from '../../services';
 import {
   existsInCart,
   existsInFavourites,
@@ -30,8 +32,10 @@ class App extends React.Component {
     super();
     this.state = {
       products: [],
+      secretProducts: [],
       favourites: [],
       cart: [],
+      isAuthorized: false,
       loading: true,
       error: undefined,
     };
@@ -76,13 +80,33 @@ class App extends React.Component {
       });
     }
   }
+
+  async handleLogin(username, password) {
+    try {
+      const { location, history } = this.props;
+      await authService.authorize(username, password);
+      const query = queryString.parse(location.search);
+      const redirectUrl = query.redirectedFrom || '/';
+      const secretProducts = await productsService.getProductsSecure();
+      this.setState(
+        { isAuthorized: true, secretProducts },
+        () => history.push(redirectUrl)
+      );
+    } catch(e) {
+      this.setState({ loginError: e.message });
+    }
+  }
+
   render() {
     const {
       products,
+      secretProducts,
       favourites,
       cart,
+      isAuthorized,
       loading,
       error,
+      loginError,
     } = this.state;
 
     if (loading) {
@@ -132,6 +156,20 @@ class App extends React.Component {
             }}
           />
 
+          <Route path="/secret-products" render={
+            ({ location }) => (
+              isAuthorized
+              ? <ProductsCollection
+                products={secretProducts}
+                onCart={(product) => this.addToCart(product)}
+                onFavourites={(product) => this.toggleFavourite(product)}
+                isFavourite={(product) => favourites.findIndex((favouriteProduct) => favouriteProduct.id === product.id) !== -1}
+              />
+              : <Redirect to={`/login?redirectedFrom=${location.pathname}`} />
+            )
+          }>
+          </Route>
+
           <Route path="/products/:id" render={
             ({ match }) => {
               const product = getProductById(match.params.id, products);
@@ -162,6 +200,10 @@ class App extends React.Component {
               isFavourite={(product) => favourites.findIndex((favouriteProduct) => favouriteProduct.id === product.id) !== -1}
             />
           </Route>
+          
+          <Route path="/login">
+            <Login onSubmit={(username, password) => this.handleLogin(username, password)} error={loginError} />
+          </Route>
 
           <Route path="*">404</Route>
         </Switch>
@@ -170,4 +212,4 @@ class App extends React.Component {
   }
 }
 
-export default App;
+export default withRouter(App);
