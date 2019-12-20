@@ -23,164 +23,154 @@ import {
 import './App.css';
 import { connect } from 'react-redux';
 
-class App extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      secretProducts: [],
-      isAuthorized: false,
-    };
-  }
+function App(props) {
+  const {
+    products,
+    secretProducts,
+    favourites,
+    cart,
+    isAuthorized,
+    onFavourite,
+    onCart,
+    loading,
+    error,
+    loginError,
+    onCredentialsSubmit,
+  } = props;
 
-  async handleLogin(username, password) {
-    try {
-      const { location, history } = this.props;
-      await authService.authorize(username, password);
-      const query = queryString.parse(location.search);
-      const redirectUrl = query.redirectedFrom || '/';
-      const secretProducts = await productsService.getProductsSecure();
-      this.setState(
-        { isAuthorized: true, secretProducts },
-        () => history.push(redirectUrl)
-      );
-    } catch(e) {
-      this.setState({ loginError: e.message });
-    }
-  }
-
-  render() {
-    const {
-      products,
-      favourites,
-      cart,
-      onFavourite,
-      onCart,
-      loading,
-      error,
-    } = this.props;
-    const {
-      secretProducts,
-      isAuthorized,
-      loginError,
-    } = this.state;
-
-    if (loading) {
-      return (
-        <Loader
-          className="App-container"
-          type="ThreeDots"
-          color="red"
-          height={80}
-          width={80}
-        />
-      );
-    }
-    if(error) {
-      return <p className="App-container">{error}</p>
-    }
-
+  if (loading) {
     return (
-      <div className="App-container">
-        <NavigationBar />
+      <Loader
+        className="App-container"
+        type="ThreeDots"
+        color="red"
+        height={80}
+        width={80}
+      />
+    );
+  }
+  if(error) {
+    return <p className="App-container">{error}</p>
+  }
 
-        <Switch>
-          <Route exact path="/">
-            <Redirect to="/products" />
-          </Route>
+  return (
+    <div className="App-container">
+      <NavigationBar />
 
-          <Route exact path="/products" render={
-            ({ location }) => {
-              const query = queryString.parse(location.search);
-              let maxPriceExists;
-              try {
-                maxPriceExists = validator.isNumeric(query.maxPrice);
-              } catch (e) {
-                maxPriceExists = false; 
-              }
-              const filteredProducts = maxPriceExists
-                ? products.filter((product) => product.price < Number(query.maxPrice))
-                : products;
-              return (
-                <ProductsCollection
-                  products={filteredProducts}
-                  onCart={onCart}
-                  onFavourites={onFavourite}
-                  isFavourite={(product) => favourites.findIndex((favouriteProduct) => favouriteProduct.id === product.id) !== -1}
-                />
-              );
-            }}
-          />
+      <Switch>
+        <Route exact path="/">
+          <Redirect to="/products" />
+        </Route>
 
-          <Route path="/secret-products" render={
-            ({ location }) => (
-              isAuthorized
-              ? <ProductsCollection
-                products={secretProducts}
+        <Route exact path="/products" render={
+          ({ location }) => {
+            const query = queryString.parse(location.search);
+            let maxPriceExists;
+            try {
+              maxPriceExists = validator.isNumeric(query.maxPrice);
+            } catch (e) {
+              maxPriceExists = false; 
+            }
+            const filteredProducts = maxPriceExists
+              ? products.filter((product) => product.price < Number(query.maxPrice))
+              : products;
+            return (
+              <ProductsCollection
+                products={filteredProducts}
                 onCart={onCart}
                 onFavourites={onFavourite}
                 isFavourite={(product) => favourites.findIndex((favouriteProduct) => favouriteProduct.id === product.id) !== -1}
               />
-              : <Redirect to={`/login?redirectedFrom=${location.pathname}`} />
-            )
-          }>
-          </Route>
+            );
+          }}
+        />
 
-          <Route path="/products/:id" render={
-            ({ match }) => {
-              const product = getProductById(match.params.id, products);
-              if (product) {
-                return <ProductCard product={product} />;
-              } else {
-                return (
-                  <ProductsLinkList products={products} invalidProductId={match.params.id} />
-                );
-              }
-            }}
+        <Route path="/secret-products" render={
+          ({ location }) => (
+            isAuthorized
+            ? <ProductsCollection
+              products={secretProducts}
+              onCart={onCart}
+              onFavourites={onFavourite}
+              isFavourite={(product) => favourites.findIndex((favouriteProduct) => favouriteProduct.id === product.id) !== -1}
+            />
+            : <Redirect to={`/login?redirectedFrom=${location.pathname}`} />
+          )
+        }>
+        </Route>
+
+        <Route path="/products/:id" render={
+          ({ match }) => {
+            const product = getProductById(match.params.id, products);
+            if (product) {
+              return <ProductCard product={product} />;
+            } else {
+              return (
+                <ProductsLinkList products={products} invalidProductId={match.params.id} />
+              );
+            }
+          }}
+        />
+
+        <Route path="/favourites">
+          <ProductsCollection
+            products={favourites}
+            onCart={onCart}
+            onFavourites={onFavourite}
+            isFavourite={(product) => favourites.findIndex((favouriteProduct) => favouriteProduct.id === product.id) !== -1}
           />
+        </Route>
 
-          <Route path="/favourites">
-            <ProductsCollection
-              products={favourites}
-              onCart={onCart}
-              onFavourites={onFavourite}
-              isFavourite={(product) => favourites.findIndex((favouriteProduct) => favouriteProduct.id === product.id) !== -1}
-            />
-          </Route>
+        <Route path="/cart">
+          <ProductsCollection
+            products={cart.map(entry => entry.product)}
+            onCart={onCart}
+            onFavourites={onFavourite}
+            isFavourite={(product) => favourites.findIndex((favouriteProduct) => favouriteProduct.id === product.id) !== -1}
+          />
+        </Route>
+        
+        <Route path="/login">
+          <Login onSubmit={onCredentialsSubmit} error={loginError} />
+        </Route>
 
-          <Route path="/cart">
-            <ProductsCollection
-              products={cart.map(entry => entry.product)}
-              onCart={onCart}
-              onFavourites={onFavourite}
-              isFavourite={(product) => favourites.findIndex((favouriteProduct) => favouriteProduct.id === product.id) !== -1}
-            />
-          </Route>
-          
-          <Route path="/login">
-            <Login onSubmit={(username, password) => this.handleLogin(username, password)} error={loginError} />
-          </Route>
-
-          <Route path="*">404</Route>
-        </Switch>
-      </div>
-    );
-  }
+        <Route path="*">404</Route>
+      </Switch>
+    </div>
+  );
 }
 
 function mapStateToProps(state) {
   return {
     products: state.products,
+    secretProducts: state.secretProducts,
     cart: state.cart,
+    isAuthorized: state.isAuthorized,
     favourites: state.favourites,
     loading: state.loading,
-    error: state.error
+    error: state.error,
+    loginError: state.loginError
   };
 }
 
-function mapDispatchToProps(dispath) {
+function mapDispatchToProps(dispatch, ownProps) {
   return {
-    onFavourite: (product) => dispath({ type: 'ON_FAVOURITE', product }),
-    onCart: (product) => dispath({ type: 'ON_CART', product })
+    onFavourite: (product) => dispatch({ type: 'ON_FAVOURITE', product }),
+    onCart: (product) => dispatch({ type: 'ON_CART', product }),
+    onCredentialsSubmit: async (username, password) => {
+      const { location, history } = ownProps;
+      try {
+        await authService.authorize(username, password);
+        dispatch({ type: 'AUTHORIZED' });
+        const query = queryString.parse(location.search);
+        const redirectUrl = query.redirectedFrom || '/';
+        const secretProducts = await productsService.getProductsSecure();
+        dispatch({ type: 'SECRET_PRODUCTS_LOADED', products: secretProducts });
+        history.push(redirectUrl);
+      } catch (e) {
+        dispatch({ type: 'LOGIN_ERROR', error: e.message });
+      }
+    }
   };
 }
 

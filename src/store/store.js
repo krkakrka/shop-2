@@ -4,10 +4,13 @@ import { cartReducer, favouritesReducer } from './reducers';
 
 const INITIAL_STATE = {
   products: [],
+  secretProducts: [],
   favourites: [],
   cart: [],
+  isAuthorized: false,
   loading: true,
-  error: undefined
+  error: undefined,
+  loginError: undefined
 }
 
 function rootReducer(state = INITIAL_STATE, action) {
@@ -16,6 +19,12 @@ function rootReducer(state = INITIAL_STATE, action) {
       return {
         ...state,
         products: action.products,
+        loading: false
+      };
+    case 'SECRET_PRODUCTS_LOADED':
+      return {
+        ...state,
+        secretProducts: action.products,
         loading: false
       };
     case 'PRODUCTS_LOAD_ERROR':
@@ -32,6 +41,16 @@ function rootReducer(state = INITIAL_STATE, action) {
       return {
         ...state,
         cart: cartReducer(state.cart, action)
+      };
+    case 'LOGIN_ERROR':
+      return {
+        ...state,
+        loginError: action.error
+      };
+    case 'AUTHORIZED':
+      return {
+        ...state,
+        isAuthorized: true
       };
     default:
       return state;
