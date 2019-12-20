@@ -1,7 +1,7 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import { ProductCard } from '../';
-import { noop } from '../../utils';
+import { noop } from '../../services/utils';
 import './ProductsCollection.css';
 
 function ProductsCollection({ products, onCart, onFavourites, renderProduct, isFavourite = noop }) {
