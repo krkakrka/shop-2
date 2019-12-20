@@ -9,7 +9,6 @@ function ProductsCollection({ products, onCart, onFavourites, renderProduct, isF
     <Grid
       container
       spacing={4}
-      style={{ width: '100%' }}
       className="ProductsCollection-container"
     >
       {products.map(
