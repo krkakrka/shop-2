@@ -1,4 +1,5 @@
 import React from 'react';
+import { compose } from 'redux';
 import Loader from 'react-loader-spinner';
 import {
   Switch,
@@ -17,68 +18,18 @@ import {
 } from '../';
 import { productsService, authService } from '../../services';
 import {
-  existsInCart,
-  existsInFavourites,
-  getFavouritesProductIndex,
-  getCartProductIndex,
-  replaceProduct,
-  removeProduct,
   getProductById
 } from './App.utils';
 import './App.css';
+import { connect } from 'react-redux';
 
 class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      products: [],
       secretProducts: [],
-      favourites: [],
-      cart: [],
       isAuthorized: false,
-      loading: true,
-      error: undefined,
     };
-  }
-
-  componentDidMount() {
-    productsService.getProducts()
-      .then((products) => this.setState({ products }))
-      .catch((err) => this.setState({ error: err.message }))
-      .finally(() => this.setState({ loading: false }))
-    ;
-  }
-
-  addToCart(product) {
-    const { cart } = this.state;
-
-    if (existsInCart(product, cart)) {
-      const index = getCartProductIndex(product, cart);
-      const currentCount = cart[index].count;
-      const newProduct = { product, count: currentCount + 1 };
-      this.setState({
-        cart: replaceProduct(cart, index, newProduct)
-      })
-    } else {
-      this.setState({
-        cart: cart.concat({ product, count: 1 })
-      });
-    }
-  }
-
-  toggleFavourite(product) {
-    const { favourites } = this.state;
-
-    if (existsInFavourites(product, favourites)) {
-      const favouriteIndex = getFavouritesProductIndex(product, favourites);
-      this.setState({
-        favourites: removeProduct(favourites, favouriteIndex)
-      })
-    } else {
-      this.setState({
-        favourites: favourites.concat(product)
-      });
-    }
   }
 
   async handleLogin(username, password) {
@@ -100,12 +51,16 @@ class App extends React.Component {
   render() {
     const {
       products,
-      secretProducts,
       favourites,
       cart,
-      isAuthorized,
+      onFavourite,
+      onCart,
       loading,
       error,
+    } = this.props;
+    const {
+      secretProducts,
+      isAuthorized,
       loginError,
     } = this.state;
 
@@ -148,8 +103,8 @@ class App extends React.Component {
               return (
                 <ProductsCollection
                   products={filteredProducts}
-                  onCart={(product) => this.addToCart(product)}
-                  onFavourites={(product) => this.toggleFavourite(product)}
+                  onCart={onCart}
+                  onFavourites={onFavourite}
                   isFavourite={(product) => favourites.findIndex((favouriteProduct) => favouriteProduct.id === product.id) !== -1}
                 />
               );
@@ -161,8 +116,8 @@ class App extends React.Component {
               isAuthorized
               ? <ProductsCollection
                 products={secretProducts}
-                onCart={(product) => this.addToCart(product)}
-                onFavourites={(product) => this.toggleFavourite(product)}
+                onCart={onCart}
+                onFavourites={onFavourite}
                 isFavourite={(product) => favourites.findIndex((favouriteProduct) => favouriteProduct.id === product.id) !== -1}
               />
               : <Redirect to={`/login?redirectedFrom=${location.pathname}`} />
@@ -186,8 +141,8 @@ class App extends React.Component {
           <Route path="/favourites">
             <ProductsCollection
               products={favourites}
-              onCart={(product) => this.addToCart(product)}
-              onFavourites={(product) => this.toggleFavourite(product)}
+              onCart={onCart}
+              onFavourites={onFavourite}
               isFavourite={(product) => favourites.findIndex((favouriteProduct) => favouriteProduct.id === product.id) !== -1}
             />
           </Route>
@@ -195,8 +150,8 @@ class App extends React.Component {
           <Route path="/cart">
             <ProductsCollection
               products={cart.map(entry => entry.product)}
-              onCart={(product) => this.addToCart(product)}
-              onFavourites={(product) => this.toggleFavourite(product)}
+              onCart={onCart}
+              onFavourites={onFavourite}
               isFavourite={(product) => favourites.findIndex((favouriteProduct) => favouriteProduct.id === product.id) !== -1}
             />
           </Route>
@@ -212,4 +167,24 @@ class App extends React.Component {
   }
 }
 
-export default withRouter(App);
+function mapStateToProps(state) {
+  return {
+    products: state.products,
+    cart: state.cart,
+    favourites: state.favourites,
+    loading: state.loading,
+    error: state.error
+  };
+}
+
+function mapDispatchToProps(dispath) {
+  return {
+    onFavourite: (product) => dispath({ type: 'ON_FAVOURITE', product }),
+    onCart: (product) => dispath({ type: 'ON_CART', product })
+  };
+}
+
+export default compose(
+  withRouter,
+  connect(mapStateToProps, mapDispatchToProps)
+)(App);
