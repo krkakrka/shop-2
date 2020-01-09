@@ -14,7 +14,8 @@ import {
   NavigationBar,
   ProductsLinkList,
   ProductCard,
-  Login
+  Login,
+  ProductsCartSummary,
 } from '../';
 import { productsService, authService } from '../../services';
 import {
@@ -28,7 +29,6 @@ function App(props) {
     products,
     secretProducts,
     favourites,
-    cart,
     isAuthorized,
     onFavourite,
     onCart,
@@ -122,12 +122,7 @@ function App(props) {
         </Route>
 
         <Route path="/cart">
-          <ProductsCollection
-            products={cart.map(entry => entry.product)}
-            onCart={onCart}
-            onFavourites={onFavourite}
-            isFavourite={(product) => favourites.findIndex((favouriteProduct) => favouriteProduct.id === product.id) !== -1}
-          />
+          <ProductsCartSummary />
         </Route>
         
         <Route path="/login">
@@ -144,7 +139,6 @@ function mapStateToProps(state) {
   return {
     products: state.products,
     secretProducts: state.secretProducts,
-    cart: state.cart,
     isAuthorized: state.isAuthorized,
     favourites: state.favourites,
     loading: state.loading,

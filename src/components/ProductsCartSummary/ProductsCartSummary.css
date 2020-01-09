@@ -1,0 +1,9 @@
+.ProductsCartSummary-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.ProductsCartSummary-container > * {
+  /* hacky */
+  margin: 10px !important;
+}
