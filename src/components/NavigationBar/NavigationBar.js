@@ -24,10 +24,10 @@ function NavigationBar({ productsCount, secretProductsCount, favouritesCount, ca
   return (
     <AppBar position="static">
       <Tabs value={currentTab} centered>
-        <Tab label={`Products ${productsCount}`} component={Link} to="/products" />
-        <Tab label={`Secret Products ${secretProductsCount}`} component={Link} to="/secret-products" />
-        <Tab label={`Favourites ${favouritesCount}`} component={Link} to="/favourites" />
-        <Tab label={`Cart ${cartCount}`} component={Link} to="/cart" />
+        <Tab label={`Products (${productsCount})`} component={Link} to="/products" />
+        <Tab label={`Secret Products (${secretProductsCount})`} component={Link} to="/secret-products" />
+        <Tab label={`Favourites (${favouritesCount})`} component={Link} to="/favourites" />
+        <Tab label={`Cart (${cartCount})`} component={Link} to="/cart" />
         <Tab label="Login" component={Link} to="/login" />
       </Tabs>
     </AppBar>
