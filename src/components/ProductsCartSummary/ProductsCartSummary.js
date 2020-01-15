@@ -3,6 +3,7 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import { connect } from 'react-redux';
 import { DatePicker } from '../';
+import { onOrder } from '../../store/actionCreators';
 import './ProductsCartSummary.css';
 
 // todo currency synbols and count.
@@ -81,7 +82,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    onOrder: (order) => dispatch({ type: 'ON_ORDER', order })
+    onOrder: (order) => dispatch(onOrder(order))
   }
 }
 

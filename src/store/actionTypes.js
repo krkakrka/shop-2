@@ -1,0 +1,9 @@
+export const ON_ORDER = 'ON_ORDER';
+export const TOGGLE_PROMO = 'TOGGLE_PROMO';
+export const PRODUCTS_LOADED = 'PRODUCTS_LOADED';
+export const SECRET_PRODUCTS_LOADED = 'SECRET_PRODUCTS_LOADED';
+export const PRODUCTS_LOAD_ERROR = 'PRODUCTS_LOAD_ERROR';
+export const ON_FAVOURITE = 'ON_FAVOURITE';
+export const ON_CART = 'ON_CART';
+export const LOGIN_ERROR = 'LOGIN_ERROR';
+export const AUTHORIZED = 'AUTHORIZED';

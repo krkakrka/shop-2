@@ -1,6 +1,8 @@
 import React from 'react';
 import { compose } from 'redux';
+import { connect } from 'react-redux';
 import Loader from 'react-loader-spinner';
+import Dialog from '@material-ui/core/Dialog';
 import {
   Switch,
   Route,
@@ -17,12 +19,16 @@ import {
   Login,
   ProductsCartSummary,
 } from '../';
-import { productsService, authService } from '../../services';
 import {
   getProductById
 } from './App.utils';
+import {
+  onFavourite,
+  onCart,
+  togglePromo,
+  maybeAuthorize
+} from '../../store/actionCreators';
 import './App.css';
-import { connect } from 'react-redux';
 
 function App(props) {
   const {
@@ -36,6 +42,8 @@ function App(props) {
     error,
     loginError,
     onCredentialsSubmit,
+    promoVisible,
+    onDialogClose
   } = props;
 
   if (loading) {
@@ -55,6 +63,10 @@ function App(props) {
 
   return (
     <div className="App-container">
+      <Dialog open={promoVisible} onClose={onDialogClose}>
+        DIALOG
+      </Dialog>
+
       <NavigationBar />
 
       <Switch>
@@ -143,27 +155,21 @@ function mapStateToProps(state) {
     favourites: state.favourites,
     loading: state.loading,
     error: state.error,
-    loginError: state.loginError
+    loginError: state.loginError,
+    promoVisible: state.promoVisible
   };
 }
 
 function mapDispatchToProps(dispatch, ownProps) {
   return {
-    onFavourite: (product) => dispatch({ type: 'ON_FAVOURITE', product }),
-    onCart: (product) => dispatch({ type: 'ON_CART', product }),
-    onCredentialsSubmit: async (username, password) => {
-      const { location, history } = ownProps;
-      try {
-        await authService.authorize(username, password);
-        dispatch({ type: 'AUTHORIZED' });
-        const query = queryString.parse(location.search);
-        const redirectUrl = query.redirectedFrom || '/';
-        const secretProducts = await productsService.getProductsSecure();
-        dispatch({ type: 'SECRET_PRODUCTS_LOADED', products: secretProducts });
-        history.push(redirectUrl);
-      } catch (e) {
-        dispatch({ type: 'LOGIN_ERROR', error: e.message });
-      }
+    onFavourite: (product) => dispatch(onFavourite(product)),
+    onCart: (product) => dispatch(onCart(product)),
+    onDialogClose: () => dispatch(togglePromo()),
+    onCredentialsSubmit: (username, password) => {
+      const { location } = ownProps;
+      const query = queryString.parse(location.search);
+      const redirectUrl = query.redirectedFrom || '/';
+      dispatch(maybeAuthorize(username, password, redirectUrl))
     }
   };
 }
