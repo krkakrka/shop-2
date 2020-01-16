@@ -32,7 +32,7 @@ function addToCart(product, cart) {
   }
 }
 
-function cartReducer(cart, action) {
+function cartReducer(cart = [], action) {
   switch(action.type) {
     case ON_CART:
       return addToCart(action.product, cart);

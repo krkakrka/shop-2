@@ -3,7 +3,7 @@ import {
 } from '../actionTypes';
 
 
-export default function loginErrorReducer(error, action) {
+export default function loginErrorReducer(error = null, action) {
   switch(action.type) {
     case LOGIN_ERROR:
       return action.error;

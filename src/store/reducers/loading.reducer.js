@@ -3,7 +3,7 @@ import {
   SECRET_PRODUCTS_LOADED
 } from '../actionTypes';
 
-export default function loadingReducer(loading, action) {
+export default function loadingReducer(loading = true, action) {
   switch(action.type) {
     case PRODUCTS_LOADED:
       return false;
@@ -13,3 +13,4 @@ export default function loadingReducer(loading, action) {
       return loading;
   }
 }
+

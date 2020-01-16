@@ -1,4 +1,4 @@
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { productsService } from '../services';
@@ -21,19 +21,6 @@ import {
   PRODUCTS_LOAD_ERROR,
 } from './actionTypes';
 
-const INITIAL_STATE = {
-  products: [],
-  secretProducts: [],
-  favourites: [],
-  cart: [],
-  orders: [],
-  isAuthorized: false,
-  loginError: undefined,
-  loading: true,
-  error: undefined,
-  promoVisible: false
-}
-
 function schedulePromo(timeout) {
   return (dispatch, getState) => {
     window.setTimeout(() => {
@@ -42,20 +29,18 @@ function schedulePromo(timeout) {
   };
 }
 
-function rootReducer(state = INITIAL_STATE, action) {
-  return {
-    products: productsReducer(state.products, action),
-    secretProducts: secretProductsReducer(state.secretProducts, action),
-    favourites: favouritesReducer(state.favourites, action),
-    cart: cartReducer(state.cart, action),
-    orders: ordersReducer(state.orders, action),
-    isAuthorized: isAuthorizedReducer(state.isAuthorized, action),
-    loginError: loginErrorReducer(state.loginError, action),
-    loading: loadingReducer(state.loading, action),
-    error: errorReducer(state.error, action),
-    promoVisible: promoVisibleReducer(state.promo, action)
-  };
-}
+const rootReducer = combineReducers({
+  products: productsReducer,
+  secretProducts: secretProductsReducer,
+  favourites: favouritesReducer,
+  cart: cartReducer,
+  orders: ordersReducer,
+  isAuthorized: isAuthorizedReducer,
+  loginError: loginErrorReducer,
+  loading: loadingReducer,
+  error: errorReducer,
+  promoVisible: promoVisibleReducer
+});
 
 const store = createStore(
   rootReducer,

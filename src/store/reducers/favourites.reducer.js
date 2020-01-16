@@ -28,7 +28,7 @@ function toggleFavourite(product, favourites) {
   }
 }
 
-function favouritesReducer(favourites, action) {
+function favouritesReducer(favourites = [], action) {
   switch (action.type) {
     case ON_FAVOURITE: {
       return toggleFavourite(action.product, favourites);

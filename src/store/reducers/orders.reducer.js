@@ -2,7 +2,7 @@ import {
   ON_ORDER
 } from '../actionTypes';
 
-function ordersReducer(orders, action) {
+function ordersReducer(orders = [], action) {
   switch(action.type) {
     case ON_ORDER:
       return orders.concat(action.order);
