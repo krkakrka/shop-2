@@ -1,11 +1,8 @@
 const USER_ACTIONS = 'USER_ACTIONS';
 
 function getPreviousActions() {
-  try {
-    return JSON.parse(window.localStorage.getItem(USER_ACTIONS));
-  } catch (e) {
-    return [];
-  }
+  const userActionsStr = window.localStorage.getItem(USER_ACTIONS);
+  return JSON.parse(userActionsStr) || [];
 }
 
 function saveAction(action) {
