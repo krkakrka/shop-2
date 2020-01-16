@@ -1,3 +1,8 @@
+import {
+  ON_CART,
+  ON_ORDER
+} from '../actionTypes';
+
 function getCartProductIndex(product, cart) {
   return cart.findIndex((cartProduct) => cartProduct.product.id === product.id);
 }
@@ -29,9 +34,9 @@ function addToCart(product, cart) {
 
 function cartReducer(cart, action) {
   switch(action.type) {
-    case 'ON_CART':
+    case ON_CART:
       return addToCart(action.product, cart);
-    case 'ON_ORDER':
+    case ON_ORDER:
       return [];
     default:
       return cart;

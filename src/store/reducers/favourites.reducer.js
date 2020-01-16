@@ -1,3 +1,7 @@
+import {
+  ON_FAVOURITE
+} from '../actionTypes';
+
 function getFavouritesProductIndex(product, favourites) {
   return favourites.findIndex((favouriteProduct) => favouriteProduct.id === product.id);
 }
@@ -26,7 +30,7 @@ function toggleFavourite(product, favourites) {
 
 function favouritesReducer(favourites, action) {
   switch (action.type) {
-    case 'ON_FAVOURITE': {
+    case ON_FAVOURITE: {
       return toggleFavourite(action.product, favourites);
     }
     default:

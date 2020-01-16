@@ -3,17 +3,22 @@ import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { productsService } from '../services';
 import actionRecorder from './middlewares/actionRecorder';
-import { cartReducer, favouritesReducer, ordersReducer } from './reducers';
 import {
-  ON_ORDER,
+  productsReducer,
+  secretProductsReducer,
+  favouritesReducer,
+  cartReducer,
+  ordersReducer,
+  isAuthorizedReducer,
+  loginErrorReducer,
+  loadingReducer,
+  errorReducer,
+  promoVisibleReducer
+} from './reducers';
+import {
   TOGGLE_PROMO,
   PRODUCTS_LOADED,
-  SECRET_PRODUCTS_LOADED,
   PRODUCTS_LOAD_ERROR,
-  ON_FAVOURITE,
-  ON_CART,
-  LOGIN_ERROR,
-  AUTHORIZED
 } from './actionTypes';
 
 const INITIAL_STATE = {
@@ -23,9 +28,9 @@ const INITIAL_STATE = {
   cart: [],
   orders: [],
   isAuthorized: false,
+  loginError: undefined,
   loading: true,
   error: undefined,
-  loginError: undefined,
   promoVisible: false
 }
 
@@ -38,58 +43,18 @@ function schedulePromo(timeout) {
 }
 
 function rootReducer(state = INITIAL_STATE, action) {
-  switch(action.type) {
-    case TOGGLE_PROMO:
-      return {
-        ...state,
-        promoVisible: !state.promoVisible
-      };
-    case PRODUCTS_LOADED:
-      return {
-        ...state,
-        products: action.products,
-        loading: false
-      };
-    case SECRET_PRODUCTS_LOADED:
-      return {
-        ...state,
-        secretProducts: action.products,
-        loading: false
-      };
-    case PRODUCTS_LOAD_ERROR:
-      return {
-        ...state,
-        error: 'Product loading failed'
-      };
-    case ON_FAVOURITE:
-      return {
-        ...state,
-        favourites: favouritesReducer(state.favourites, action)
-      };
-    case ON_CART:
-      return {
-        ...state,
-        cart: cartReducer(state.cart, action)
-      };
-    case ON_ORDER:
-      return {
-        ...state,
-        cart: cartReducer(state.cart, action),
-        orders: ordersReducer(state.orders, action)
-      };
-    case LOGIN_ERROR:
-      return {
-        ...state,
-        loginError: action.error
-      };
-    case AUTHORIZED:
-      return {
-        ...state,
-        isAuthorized: true
-      };
-    default:
-      return state;
-  }
+  return {
+    products: productsReducer(state.products, action),
+    secretProducts: secretProductsReducer(state.secretProducts, action),
+    favourites: favouritesReducer(state.favourites, action),
+    cart: cartReducer(state.cart, action),
+    orders: ordersReducer(state.orders, action),
+    isAuthorized: isAuthorizedReducer(state.isAuthorized, action),
+    loginError: loginErrorReducer(state.loginError, action),
+    loading: loadingReducer(state.loading, action),
+    error: errorReducer(state.error, action),
+    promoVisible: promoVisibleReducer(state.promo, action)
+  };
 }
 
 const store = createStore(
