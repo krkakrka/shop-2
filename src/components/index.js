@@ -6,6 +6,7 @@ import ProductsLinkList from './ProductsLinkList';
 import Login from './Login';
 import ProductsCartSummary from './ProductsCartSummary';
 import DatePicker from './DatePicker';
+import ThemeFAB from './ThemeFAB';
 
 export {
   App,
@@ -15,5 +16,6 @@ export {
   ProductsLinkList,
   Login,
   ProductsCartSummary,
-  DatePicker
+  DatePicker,
+  ThemeFAB
 };

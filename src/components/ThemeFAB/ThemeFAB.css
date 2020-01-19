@@ -1,0 +1,7 @@
+.ThemeFAB-container {
+  position: fixed;
+  right: 10px;
+  top: 10px;
+  /* material navbars z-index is 1100 */
+  z-index: 1101;
+}

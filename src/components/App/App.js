@@ -29,6 +29,7 @@ import {
   maybeAuthorize
 } from '../../store/actionCreators';
 import './App.css';
+import ThemeFAB from '../ThemeFAB';
 
 function App(props) {
   const {
@@ -63,11 +64,13 @@ function App(props) {
 
   return (
     <div className="App-container">
+      <ThemeFAB />
+
       <Dialog open={promoVisible} onClose={onDialogClose}>
         DIALOG
       </Dialog>
 
-      <NavigationBar />
+      <NavigationBar className="App-container-navbar" />
 
       <Switch>
         <Route exact path="/">

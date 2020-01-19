@@ -4,6 +4,6 @@
   align-items: center;
 }
 
-.App-container > * {
+.App-container-navbar {
   margin-bottom: 32px;
 }

@@ -7,6 +7,7 @@ import {
   Link,
   useLocation
 } from 'react-router-dom';
+import { ThemeContext, THEME_DARK, THEME_LIGHT } from '../../contexts/theme.context';
 
 const PATH_TO_TAB = [
   '/products',
@@ -16,13 +17,30 @@ const PATH_TO_TAB = [
   '/login'
 ];
 
-function NavigationBar({ productsCount, secretProductsCount, favouritesCount, cartCount }) {
+const THEMES_TO_COLORS = {
+  [THEME_DARK]: 'black',
+  [THEME_LIGHT]: 'white'
+};
+
+function getOppositeTheme(theme) {
+  return theme === THEME_DARK ? THEME_LIGHT : THEME_DARK;
+}
+
+function NavigationBar({ productsCount, secretProductsCount, favouritesCount, cartCount, className }) {
   const location = useLocation();
+  const { theme } = React.useContext(ThemeContext);
   const tabIndex = PATH_TO_TAB.indexOf(location.pathname);
   const currentTab =  tabIndex === -1 ? false : tabIndex;
   
   return (
-    <AppBar position="static">
+    <AppBar
+      position="static"
+      style={{
+        backgroundColor: THEMES_TO_COLORS[theme],
+        color: THEMES_TO_COLORS[getOppositeTheme(theme)]
+      }}
+      className={className}
+    >
       <Tabs value={currentTab} centered>
         <Tab label={`Products (${productsCount})`} component={Link} to="/products" />
         <Tab label={`Secret Products (${secretProductsCount})`} component={Link} to="/secret-products" />
