@@ -7,3 +7,5 @@ export const ON_FAVOURITE = 'ON_FAVOURITE';
 export const ON_CART = 'ON_CART';
 export const LOGIN_ERROR = 'LOGIN_ERROR';
 export const AUTHORIZED = 'AUTHORIZED';
+
+export const FEEDBACK_SUBMITED = 'FEEDBACK_SUBMITED';

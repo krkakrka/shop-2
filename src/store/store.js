@@ -13,7 +13,8 @@ import {
   loginErrorReducer,
   loadingReducer,
   errorReducer,
-  feedbackVisibleReducer
+  feedbackVisibleReducer,
+  userFeedbackReducer
 } from './reducers';
 import {
   TOGGLE_USER_FEEDBACK_DIALOG,
@@ -39,7 +40,8 @@ const rootReducer = combineReducers({
   loginError: loginErrorReducer,
   loading: loadingReducer,
   error: errorReducer,
-  feedbackVisible: feedbackVisibleReducer
+  feedbackVisible: feedbackVisibleReducer,
+  userFeedback: userFeedbackReducer
 });
 
 const store = createStore(

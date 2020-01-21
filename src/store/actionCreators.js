@@ -9,7 +9,8 @@ import {
   ON_CART,
   LOGIN_ERROR,
   AUTHORIZED,
-  TOGGLE_USER_FEEDBACK_DIALOG
+  TOGGLE_USER_FEEDBACK_DIALOG,
+  FEEDBACK_SUBMITED
 } from './actionTypes';
 
 export function onOrder(order) {
@@ -60,4 +61,8 @@ export function maybeAuthorize(username, password, redirectUrl) {
       dispatch(loginError(e.message));
     }
   }
+}
+
+export function feedbackSubmit(feedback) {
+  return { type: FEEDBACK_SUBMITED, feedback };
 }

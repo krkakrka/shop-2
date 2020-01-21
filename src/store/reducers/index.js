@@ -8,6 +8,7 @@ import loginErrorReducer from './loginError.reducer';
 import loadingReducer from './loading.reducer';
 import errorReducer from './error.reducer';
 import feedbackVisibleReducer from './feedbackVisible.reducer';
+import userFeedbackReducer from './userFeedback.reducer';
 
 export {
   productsReducer,
@@ -19,5 +20,6 @@ export {
   loginErrorReducer,
   loadingReducer,
   errorReducer,
-  feedbackVisibleReducer
+  feedbackVisibleReducer,
+  userFeedbackReducer
 };
