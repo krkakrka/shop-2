@@ -20,7 +20,7 @@ function validate(formValues) {
   if (!formValues.feedback) {
     errors.feedback = 'Missing feedback';
   }
-  return errors;
+  return Object.keys(errors).length > 0 ? errors : null;
 }
 
 function FeedbackDialog(props) {
@@ -36,6 +36,7 @@ function FeedbackDialog(props) {
     const timeString = (new Date()).toString();
     const formValues = { name, email, feedback, timeString };
     const errors = validate(formValues);
+
     if (errors) {
       setErrors(errors);
     } else {
