@@ -7,7 +7,7 @@ import isAuthorizedReducer from './isAuthorized.reducer';
 import loginErrorReducer from './loginError.reducer';
 import loadingReducer from './loading.reducer';
 import errorReducer from './error.reducer';
-import promoVisibleReducer from './promoVisible.reducer';
+import feedbackVisibleReducer from './feedbackVisible.reducer';
 
 export {
   productsReducer,
@@ -19,5 +19,5 @@ export {
   loginErrorReducer,
   loadingReducer,
   errorReducer,
-  promoVisibleReducer
+  feedbackVisibleReducer
 };

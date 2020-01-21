@@ -25,7 +25,7 @@ import {
 import {
   onFavourite,
   onCart,
-  togglePromo,
+  toggleFeedback,
   maybeAuthorize
 } from '../../store/actionCreators';
 import './App.css';
@@ -43,7 +43,7 @@ function App(props) {
     error,
     loginError,
     onCredentialsSubmit,
-    promoVisible,
+    feedbackVisible,
     onDialogClose
   } = props;
 
@@ -66,7 +66,7 @@ function App(props) {
     <div className="App-container">
       <ThemeFAB />
 
-      <Dialog open={promoVisible} onClose={onDialogClose}>
+      <Dialog open={feedbackVisible} onClose={onDialogClose}>
         DIALOG
       </Dialog>
 
@@ -159,7 +159,7 @@ function mapStateToProps(state) {
     loading: state.loading,
     error: state.error,
     loginError: state.loginError,
-    promoVisible: state.promoVisible
+    feedbackVisible: state.feedbackVisible
   };
 }
 
@@ -167,7 +167,7 @@ function mapDispatchToProps(dispatch, ownProps) {
   return {
     onFavourite: (product) => dispatch(onFavourite(product)),
     onCart: (product) => dispatch(onCart(product)),
-    onDialogClose: () => dispatch(togglePromo()),
+    onDialogClose: () => dispatch(toggleFeedback()),
     onCredentialsSubmit: (username, password) => {
       const { location } = ownProps;
       const query = queryString.parse(location.search);

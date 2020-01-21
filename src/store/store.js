@@ -13,18 +13,18 @@ import {
   loginErrorReducer,
   loadingReducer,
   errorReducer,
-  promoVisibleReducer
+  feedbackVisibleReducer
 } from './reducers';
 import {
-  TOGGLE_PROMO,
+  TOGGLE_USER_FEEDBACK_DIALOG,
   PRODUCTS_LOADED,
   PRODUCTS_LOAD_ERROR,
 } from './actionTypes';
 
-function schedulePromo(timeout) {
+function scheduleFeedback(timeout) {
   return (dispatch, getState) => {
     window.setTimeout(() => {
-      dispatch({ type: TOGGLE_PROMO });
+      dispatch({ type: TOGGLE_USER_FEEDBACK_DIALOG  });
     }, timeout);
   };
 }
@@ -39,7 +39,7 @@ const rootReducer = combineReducers({
   loginError: loginErrorReducer,
   loading: loadingReducer,
   error: errorReducer,
-  promoVisible: promoVisibleReducer
+  feedbackVisible: feedbackVisibleReducer
 });
 
 const store = createStore(
@@ -56,6 +56,6 @@ productsService.getProducts()
   .then(products => store.dispatch({ type: PRODUCTS_LOADED, products }))
   .catch(error => store.dispatch({ type: PRODUCTS_LOAD_ERROR, error }));
 
-store.dispatch(schedulePromo(5000));
+store.dispatch(scheduleFeedback(5000));
 
 export { store };

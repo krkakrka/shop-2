@@ -2,22 +2,22 @@ import { productsService, authService } from '../services';
 
 import {
   ON_ORDER,
-  TOGGLE_PROMO,
   PRODUCTS_LOADED,
   SECRET_PRODUCTS_LOADED,
   PRODUCTS_LOAD_ERROR,
   ON_FAVOURITE,
   ON_CART,
   LOGIN_ERROR,
-  AUTHORIZED
+  AUTHORIZED,
+  TOGGLE_USER_FEEDBACK_DIALOG
 } from './actionTypes';
 
 export function onOrder(order) {
   return { type: ON_ORDER, order };
 }
 
-export function togglePromo() {
-  return { type: TOGGLE_PROMO };
+export function toggleFeedback() {
+  return { type: TOGGLE_USER_FEEDBACK_DIALOG };
 }
 
 export function productsLoaded(products) {
