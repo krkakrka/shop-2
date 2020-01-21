@@ -161,10 +161,10 @@ function mapDispatchToProps(dispatch, ownProps) {
     onFavourite: (product) => dispatch(onFavourite(product)),
     onCart: (product) => dispatch(onCart(product)),
     onCredentialsSubmit: (username, password) => {
-      const { location } = ownProps;
+      const { location, history } = ownProps;
       const query = queryString.parse(location.search);
       const redirectUrl = query.redirectedFrom || '/';
-      dispatch(maybeAuthorize(username, password, redirectUrl))
+      dispatch(maybeAuthorize(username, password, redirectUrl, history))
     }
   };
 }

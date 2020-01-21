@@ -49,14 +49,14 @@ export function authorized() {
   return { type: AUTHORIZED };
 }
 
-export function maybeAuthorize(username, password, redirectUrl) {
+export function maybeAuthorize(username, password, redirectUrl, history) {
   return async (dispatch) => {
     try {
       await authService.authorize(username, password);
       dispatch(authorized());
       const secretProducts = await productsService.getProductsSecure();
       dispatch(secretProductsLoaded(secretProducts));
-      window.location.history.push(redirectUrl);
+      history.push(redirectUrl);
     } catch (e) {
       dispatch(loginError(e.message));
     }
