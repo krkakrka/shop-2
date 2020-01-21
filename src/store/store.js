@@ -56,6 +56,6 @@ productsService.getProducts()
   .then(products => store.dispatch({ type: PRODUCTS_LOADED, products }))
   .catch(error => store.dispatch({ type: PRODUCTS_LOAD_ERROR, error }));
 
-store.dispatch(scheduleFeedback(5000));
+store.dispatch(scheduleFeedback(1000));
 
 export { store };

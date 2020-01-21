@@ -2,7 +2,6 @@ import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import Loader from 'react-loader-spinner';
-import Dialog from '@material-ui/core/Dialog';
 import {
   Switch,
   Route,
@@ -18,6 +17,7 @@ import {
   ProductCard,
   Login,
   ProductsCartSummary,
+  FeedbackDialog
 } from '../';
 import {
   getProductById
@@ -25,7 +25,6 @@ import {
 import {
   onFavourite,
   onCart,
-  toggleFeedback,
   maybeAuthorize
 } from '../../store/actionCreators';
 import './App.css';
@@ -42,9 +41,7 @@ function App(props) {
     loading,
     error,
     loginError,
-    onCredentialsSubmit,
-    feedbackVisible,
-    onDialogClose
+    onCredentialsSubmit
   } = props;
 
   if (loading) {
@@ -65,10 +62,7 @@ function App(props) {
   return (
     <div className="App-container">
       <ThemeFAB />
-
-      <Dialog open={feedbackVisible} onClose={onDialogClose}>
-        DIALOG
-      </Dialog>
+      <FeedbackDialog />
 
       <NavigationBar className="App-container-navbar" />
 
@@ -158,8 +152,7 @@ function mapStateToProps(state) {
     favourites: state.favourites,
     loading: state.loading,
     error: state.error,
-    loginError: state.loginError,
-    feedbackVisible: state.feedbackVisible
+    loginError: state.loginError
   };
 }
 
@@ -167,7 +160,6 @@ function mapDispatchToProps(dispatch, ownProps) {
   return {
     onFavourite: (product) => dispatch(onFavourite(product)),
     onCart: (product) => dispatch(onCart(product)),
-    onDialogClose: () => dispatch(toggleFeedback()),
     onCredentialsSubmit: (username, password) => {
       const { location } = ownProps;
       const query = queryString.parse(location.search);

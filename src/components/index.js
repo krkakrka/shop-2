@@ -7,6 +7,7 @@ import Login from './Login';
 import ProductsCartSummary from './ProductsCartSummary';
 import DatePicker from './DatePicker';
 import ThemeFAB from './ThemeFAB';
+import FeedbackDialog from './FeedbackDialog';
 
 export {
   App,
@@ -17,5 +18,6 @@ export {
   Login,
   ProductsCartSummary,
   DatePicker,
-  ThemeFAB
+  ThemeFAB,
+  FeedbackDialog
 };
