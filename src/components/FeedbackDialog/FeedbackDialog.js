@@ -7,63 +7,69 @@ import {
   toggleFeedback,
   feedbackSubmit
 } from '../../store/actionCreators';
+import { Form, Formik, ErrorMessage } from 'formik';
+import * as yup from 'yup';
 import './FeedbackDialog.css';
 
-function validate(formValues) {
-  const errors = {};
-  if (!formValues.name) {
-    errors.name = 'Missing name';
-  }
-  if (!formValues.email) {
-    errors.email = 'Missing email';
-  }
-  if (!formValues.feedback) {
-    errors.feedback = 'Missing feedback';
-  }
-  return Object.keys(errors).length > 0 ? errors : null;
-}
+const schema  = yup.object().shape({
+  name: yup.string().required('Please enter your name'),
+  email: yup.string().email().required('Please enter your email'),
+  feedback: yup.string().min(5, 'Please enter a move detailed feedback')
+});
 
 function FeedbackDialog(props) {
   const { feedbackVisible, onDialogClose, onFormSubmit } = props;
 
-  const [name, setName] = React.useState('');
-  const [email, setEmail] = React.useState('');
-  const [feedback, setFeedback] = React.useState('');
-  const [errors, setErrors] = React.useState({});
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = (formValues) => {
     const timeString = (new Date()).toString();
-    const formValues = { name, email, feedback, timeString };
-    const errors = validate(formValues);
-
-    if (errors) {
-      setErrors(errors);
-    } else {
-      setErrors({});
-      onFormSubmit(formValues);
-    }
+    onFormSubmit({ ...formValues, timeString });
   };
+
+  const initialValues = {
+    name: '',
+    email: '',
+    feedback: ''
+  }
 
   return (
     <Dialog open={feedbackVisible} onClose={onDialogClose}>
-      <form onSubmit={handleSubmit} noValidate className="FeedbackDialog-form">
-        <TextField label="name" value={name} onChange={e => setName(e.target.value)} />
-        {errors.name ? <p>{errors.name}</p> : null}
+      <Formik
+        initialValues={initialValues}
+        onSubmit={handleSubmit}
+        validationSchema={schema}
+      >
+        {({ handleSubmit, handleBlur, handleChange, values, errors, touched, isSubmitting }) => (
+          <Form onSubmit={handleSubmit} noValidate className="FeedbackDialog-form">
+            <TextField
+              type="name"
+              name="name"
+              label="name"
+              value={values.name}
+              onChange={handleChange} onBlur={handleBlur} />
+            <ErrorMessage name="name" />
 
-        <TextField type="email" label="email" value={email} onChange={e => setEmail(e.target.value)} />
-        {errors.email ? <p>{errors.email}</p> : null}
+            <TextField
+              type="email"
+              name="email"
+              label="email"
+              value={values.email}
+              onChange={handleChange} onBlur={handleBlur} />
+            <ErrorMessage name="email" />
 
-        <TextField
-          label="Feedback"
-          multiline
-          value={feedback}
-          onChange={e => setFeedback(e.target.value)}
-        />
-        {errors.feedback ? <p>{errors.feedback}</p> : null}
+            <TextField
+              label="Feedback"
+              name="feedback"
+              multiline
+              value={values.feedback}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+            <ErrorMessage name="feedback" />
 
-        <Button type="submit">Submit</Button>
-      </form>
+            <Button disabled={isSubmitting} type="submit">Submit</Button>
+          </Form>
+        )}
+      </Formik>
     </Dialog>
   );
 }

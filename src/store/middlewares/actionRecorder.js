@@ -11,6 +11,7 @@ function saveAction(action) {
     ...previousUserActions,
     action
   ])
+  // todo handle low space
   window.localStorage.setItem(USER_ACTIONS, actionsJson);
 }
 
