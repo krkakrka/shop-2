@@ -8,6 +8,7 @@ import ProductsCartSummary from './ProductsCartSummary';
 import DatePicker from './DatePicker';
 import ThemeFAB from './ThemeFAB';
 import FeedbackDialog from './FeedbackDialog';
+import Orders from './Orders';
 
 export {
   App,
@@ -19,5 +20,6 @@ export {
   ProductsCartSummary,
   DatePicker,
   ThemeFAB,
-  FeedbackDialog
+  FeedbackDialog,
+  Orders
 };

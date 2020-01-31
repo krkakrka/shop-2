@@ -17,7 +17,8 @@ import {
   ProductCard,
   Login,
   ProductsCartSummary,
-  FeedbackDialog
+  FeedbackDialog,
+  Orders
 } from '../';
 import {
   getProductById
@@ -132,6 +133,10 @@ function App(props) {
 
         <Route path="/cart">
           <ProductsCartSummary />
+        </Route>
+
+        <Route path="/orders">
+          <Orders />
         </Route>
         
         <Route path="/login">

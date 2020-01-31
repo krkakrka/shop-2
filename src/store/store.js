@@ -3,6 +3,7 @@ import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { productsService } from '../services';
 import actionRecorder from './middlewares/actionRecorder';
+import { cacheStateToLocalStorage, getCachedStateFromLocalStorate } from '../services';
 import {
   productsReducer,
   secretProductsReducer,
@@ -46,6 +47,7 @@ const rootReducer = combineReducers({
 
 const store = createStore(
   rootReducer,
+  getCachedStateFromLocalStorate(),
   composeWithDevTools(
     applyMiddleware(
       thunk,
@@ -54,9 +56,13 @@ const store = createStore(
   )
 );
 
-productsService.getProducts()
-  .then(products => store.dispatch({ type: PRODUCTS_LOADED, products }))
-  .catch(error => store.dispatch({ type: PRODUCTS_LOAD_ERROR, error }));
+store.subscribe(() => cacheStateToLocalStorage(store.getState()));
+
+if (store.getState().products.length === 0) {
+  productsService.getProducts()
+    .then(products => store.dispatch({ type: PRODUCTS_LOADED, products }))
+    .catch(error => store.dispatch({ type: PRODUCTS_LOAD_ERROR, error }));
+}
 
 store.dispatch(scheduleFeedback(1000));
 

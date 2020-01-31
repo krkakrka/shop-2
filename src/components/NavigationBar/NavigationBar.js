@@ -14,6 +14,7 @@ const PATH_TO_TAB = [
   '/secret-products',
   '/favourites',
   '/cart',
+  '/orders',
   '/login'
 ];
 
@@ -26,7 +27,7 @@ function getOppositeTheme(theme) {
   return theme === THEME_DARK ? THEME_LIGHT : THEME_DARK;
 }
 
-function NavigationBar({ productsCount, secretProductsCount, favouritesCount, cartCount, className }) {
+function NavigationBar({ productsCount, secretProductsCount, favouritesCount, cartCount, orderCount, className }) {
   const location = useLocation();
   const { theme } = React.useContext(ThemeContext);
   const tabIndex = PATH_TO_TAB.indexOf(location.pathname);
@@ -46,6 +47,7 @@ function NavigationBar({ productsCount, secretProductsCount, favouritesCount, ca
         <Tab label={`Secret Products (${secretProductsCount})`} component={Link} to="/secret-products" />
         <Tab label={`Favourites (${favouritesCount})`} component={Link} to="/favourites" />
         <Tab label={`Cart (${cartCount})`} component={Link} to="/cart" />
+        <Tab label={`Orders (${orderCount})`} component={Link} to="/orders" />
         <Tab label="Login" component={Link} to="/login" />
       </Tabs>
     </AppBar>
@@ -57,7 +59,8 @@ function mapStateToProps(state) {
     productsCount: state.products.length,
     secretProductsCount: state.secretProducts.length,
     favouritesCount: state.favourites.length,
-    cartCount: state.cart.length
+    cartCount: state.cart.length,
+    orderCount: state.orders.length
   };
 }
 

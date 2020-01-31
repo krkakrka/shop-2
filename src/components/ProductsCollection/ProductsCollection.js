@@ -4,7 +4,7 @@ import { ProductCard } from '../';
 import { noop } from '../../services/utils';
 import './ProductsCollection.css';
 
-function ProductsCollection({ products, onCart, onFavourites, renderProduct, isFavourite = noop }) {
+function ProductsCollection({ products, onCart, onFavourites, isFavourite = noop }) {
   return (
     <Grid
       container
